@@ -1,3 +1,17 @@
+$spans: (
+        'Boxing, $285M',
+        'Soccer, $111M',
+        'Soccer, $108M',
+        'Mixed Martial Arts, $99M',
+        'Soccer, $90M',
+        'Basketball, $85.5M',
+        'Tennis, $77.2M',
+        'Basketball, $76.9M',
+        'Football, $67.3M',
+        'Football, $59.5M'
+);
+
+
 :root {
   box-sizing: border-box;
   font-family: Arial, sans-serif;
@@ -13,6 +27,26 @@
   justify-content: center;
 }
 
+@for $i from 1 through length($spans) {
+  .person:nth-child(#{$i})::after {
+    width: 100%;
+    height: 100%;
+    content: "#{nth($spans, $i)}";
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    font-weight: 400;
+    color: transparent;
+    transition: color 1s linear;
+    z-index: 100;
+  }
+}
+
 .person {
   position: relative;
   display: flex;
@@ -23,78 +57,69 @@
   width: 200px;
   height: 231px;
   cursor: pointer;
+}
 
-  &:hover .extra{
-    overflow: visible;
-  }
+.person:hover .photo,
+.person:hover .rank,
+.person:hover .details {
+  z-index: 30;
 }
 
 .person::before {
-  display: block;
   content: '';
   width: 220px;
   height: 287px;
   position: absolute;
+  left: 50%;
+  top: -10px;
   border-radius: 10px;
   transition:
     background-color 1s linear,
-    transform 1s linear 1s;
-  left: 50%;
-  top: -10px;
+    transform 1s linear,
+    color 1s linear;
   transform: translateX(-50%);
 }
 
-.person:hover::before {
-  background-color: #EEEEEE;
-  animation: scaleUpDelayed 1s linear 1s forwards;
-}
-
-.person:not(:hover)::before {
-  animation: scaleDownDelayed 1s linear forwards;
-}
-
-@keyframes scaleUpDelayed {
-  0% {
-    transform: translateX(-50%) scale(1);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(-50%) scale(calc(264 / 220), calc(344.5 / 287));
-    opacity: 1;
-  }
-}
-
-@keyframes scaleDownDelayed {
-  0% {
-    transform: translateX(-50%) scale(calc(264 / 220), calc(344.5 / 287));
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(-50%) scale(1);
-    opacity: 0;
-  }
-}
-
 .person:hover::before{
+  z-index: 20;
   background-color: #EEEEEE;
-  animation: scaleUpDelayed 1s linear 1s forwards;
+  transform: translateX(-50%) scale(calc(264 / 220), calc(344.5 / 287));
+  color: black;
+  transition:
+          background-color 1s linear,
+          transform 1s linear 1s,
+          color 1s linear;
+}
+
+.person:hover::after{
+  z-index: 21;
+  color: black;
+  bottom: -50px;
+  transition: color 1s linear,
+  bottom 1s linear 1s;
 }
 
 .photo {
   margin-bottom: 8px;
   width: 200px;
   height: 200px;
+  border-radius: 50%;
   z-index: 10;
+  overflow: hidden;
 
   img {
+    transform: scale(1);
     width: 200px;
     height: 200px;
-    border-radius: 50%;
+    transition: transform 1s linear,
+      border-radius 1s linear;
   }
 }
 
-.details {
-  z-index: 10;
+.person:hover .photo img {
+  transition: transform 1s linear 1s,
+  border-radius 1s linear 1s;
+  transform: scale(240 / 200);
 }
 
 .rank {
@@ -124,8 +149,7 @@
 }
 
 .extra {
-  height: 0;
-  z-index: 10;
+  display: none;
 }
 
 @media screen and (min-width: 500px) and (max-width: 999px) {
